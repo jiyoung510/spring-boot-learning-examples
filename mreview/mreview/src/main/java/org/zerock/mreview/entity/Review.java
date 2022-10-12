@@ -26,6 +26,14 @@ public class Review extends BaseEntity{
     
     private String text ; //댓글
 
+    public void changeGrade(int grade){
+        this.grade = grade;
+    }
+
+    public void changeText(String text){
+        this.text = text;
+    }
+
     //Hibernate:
     //
     //    create table m_member (
