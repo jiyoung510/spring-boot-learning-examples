@@ -124,6 +124,9 @@ public class BoardController {
 
     }
 
+    @PreAuthorize("principal.username == #boardDTO.writer")
+    // principal.username : 현재 로그인된 사용자 아이디
+    // #boardDTO.writer : 현재 파라미터가 수집된 boardDTO
     @PostMapping("/modify")
     public String modify( @Valid BoardDTO boardDTO,
                           BindingResult bindingResult,
@@ -168,6 +171,7 @@ public class BoardController {
 //    }
 
 
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
 
