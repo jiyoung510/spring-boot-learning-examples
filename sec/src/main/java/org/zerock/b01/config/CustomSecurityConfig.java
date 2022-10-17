@@ -12,10 +12,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.zerock.b01.security.CustomUserDetailsService;
 import org.zerock.b01.security.handler.Custom403Handler;
+import org.zerock.b01.security.handler.CustomSocialLoginSuccessHandler;
 
 import javax.sql.DataSource;
 
@@ -39,9 +41,12 @@ public class CustomSecurityConfig {
                 .key("12345678")
                 .tokenRepository(persistentTokenRepository())
                 .userDetailsService(userDetailService)
-                .tokenValiditySeconds(60*60*24*30);
+                .tokenValiditySeconds(60*60*24*30); // 30일 보관
 
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
+
+        http.oauth2Login().loginPage("/member/login")  // 카카오 로그인 페이지
+                .successHandler(authenticationSuccessHandler());
 
         return http.build();
     }
@@ -69,5 +74,9 @@ public class CustomSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomSocialLoginSuccessHandler(passwordEncoder());
+    }
 
 }
